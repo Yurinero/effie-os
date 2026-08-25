@@ -82,6 +82,14 @@ done
 
 mkdir -p "$RELEASE_DIR" "$BUILD_DIR"
 
+if (( CLEAN )); then
+  echo "==> Cleaning previous build directories..."
+  if [[ -d "$BUILD_DIR/archiso-work" ]]; then
+    sudo rm -rf "$BUILD_DIR/archiso-work" 2>/dev/null || rm -rf "$BUILD_DIR/archiso-work" 2>/dev/null || true
+  fi
+  rm -rf "$BUILD_DIR"/repo "$BUILD_DIR"/archiso-profile "$BUILD_DIR"/packaging-tmp 2>/dev/null || true
+fi
+
 if [[ "$MODE" == "full" ]]; then
   if [[ -z "$EFFIE_ISO_DIR" || ! -f "$EFFIE_ISO_DIR/bin/omarchy-iso-make" || -z "$EFFIE_PKGS_DIR" ]]; then
     echo "WARNING: Official effie-iso or effie-pkgs repository not found beside effie-os." >&2

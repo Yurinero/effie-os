@@ -23,8 +23,11 @@ const sampleRows = [
   { entry: { name: 'Obsidian', categories: 'Office;', id: 'obsidian.desktop', icon: 'obsidian' } },
   { entry: { name: 'Superfile', categories: 'System;FileManager;Utility;', id: 'Superfile.desktop', icon: 'superfile' } },
   { entry: { name: 'Steam', categories: 'Game;', id: 'steam.desktop', icon: 'steam' } },
-  { entry: { name: 'X', categories: 'Network;Chat;', id: 'x.desktop', icon: 'x' } },
-  { entry: { name: 'cliamp', categories: 'AudioVideo;Audio;Player;', id: 'cliamp.desktop', icon: 'cliamp' } }
+  { entry: { name: 'X', id: 'X', exec: 'omarchy-launch-webapp https://x.com/', icon: 'x' } },
+  { entry: { name: 'YouTube', id: 'YouTube', exec: 'omarchy-launch-webapp https://youtube.com/', icon: 'youtube' } },
+  { entry: { name: 'cliamp', categories: 'AudioVideo;Audio;Player;', id: 'cliamp.desktop', icon: 'cliamp' } },
+  { entry: { name: 'Basecamp', id: 'Basecamp', exec: 'omarchy-launch-webapp https://launchpad.37signals.com', icon: 'basecamp' } },
+  { entry: { name: 'Discord', id: 'Discord', exec: 'omarchy-launch-webapp https://discord.com/', icon: 'discord' } }
 ]
 
 assertEqual(categories.getCategoryForEntry(sampleRows[0]), 'internet', 'Chromium maps to internet')
@@ -34,13 +37,17 @@ assertEqual(categories.getCategoryForEntry(sampleRows[3]), 'productivity', 'Obsi
 assertEqual(categories.getCategoryForEntry(sampleRows[4]), 'utilities', 'Superfile maps to utilities')
 assertEqual(categories.getCategoryForEntry(sampleRows[5]), 'games', 'Steam maps to games')
 assertEqual(categories.getCategoryForEntry(sampleRows[6]), 'internet', 'X maps to internet')
-assertEqual(categories.getCategoryForEntry(sampleRows[7]), 'media', 'cliamp maps to media')
+assertEqual(categories.getCategoryForEntry(sampleRows[7]), 'media', 'YouTube maps to media')
+assertEqual(categories.getCategoryForEntry(sampleRows[8]), 'media', 'cliamp maps to media')
+assertEqual(categories.getCategoryForEntry(sampleRows[9]), 'productivity', 'Basecamp maps to productivity')
+assertEqual(categories.getCategoryForEntry(sampleRows[10]), 'internet', 'Discord maps to internet')
 
 // Category filter
 const internetApps = categories.filterEntries(sampleRows, 'internet', '')
-assertEqual(internetApps.length, 2, 'internet filter returns 2 apps (Chromium, X)')
+assertEqual(internetApps.length, 3, 'internet filter returns 3 apps (Chromium, Discord, X)')
 assertEqual(internetApps[0].name, 'Chromium', 'first internet app is Chromium')
-assertEqual(internetApps[1].name, 'X', 'second internet app is X')
+assertEqual(internetApps[1].name, 'Discord', 'second internet app is Discord')
+assertEqual(internetApps[2].name, 'X', 'third internet app is X')
 
 // Search filter across categories
 const searchObs = categories.filterEntries(sampleRows, 'all', 'obs')
@@ -48,8 +55,8 @@ assertEqual(searchObs.length, 2, 'search finds OBS Studio and Obsidian')
 
 // Alphabetical sort
 const allSorted = categories.filterEntries(sampleRows, 'all', '')
-assertEqual(allSorted[0].name, 'Chromium', 'first alphabetically is Chromium')
-assertEqual(allSorted[allSorted.length - 1].name, 'X', 'last alphabetically is X')
+assertEqual(allSorted[0].name, 'Basecamp', 'first alphabetically is Basecamp')
+assertEqual(allSorted[allSorted.length - 1].name, 'YouTube', 'last alphabetically is YouTube')
 
 // QML integration checks
 assert(appGridQml.includes('function open(payloadJson)'), 'AppGrid exposes open lifecycle')

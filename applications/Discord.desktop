@@ -5,4 +5,5 @@ Exec=omarchy-launch-webapp https://discord.com/channels/@me
 Terminal=false
 Type=Application
 Icon=omarchy-discord
+Categories=Network;Chat;InstantMessaging;
 StartupNotify=true

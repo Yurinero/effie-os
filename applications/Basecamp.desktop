@@ -5,4 +5,5 @@ Exec=omarchy-launch-webapp https://launchpad.37signals.com
 Terminal=false
 Type=Application
 Icon=basecamp
+Categories=Office;ProjectManagement;
 StartupNotify=true

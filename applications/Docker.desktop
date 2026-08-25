@@ -5,4 +5,5 @@ Exec=xdg-terminal-exec --app-id=TUI.tile -e omarchy-launch-docker-tui
 Terminal=false
 Type=Application
 Icon=docker
+Categories=System;Development;
 StartupNotify=true

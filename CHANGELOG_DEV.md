@@ -6,6 +6,15 @@ This document tracks all modifications, additions, deletions, and pending tasks 
 
 ## 1. Activity Log
 
+### [2026-08-26] App Grid Categorization & WebApp XDG Metadata Fix
+- **Author**: Antigravity Assistant & Development Team
+- **Summary**: Added standard XDG `Categories=` metadata across all web application `.desktop` files, enhanced `AppCategories.js` URL/execution pattern matching for single-letter and web targets (`X`, `YouTube`, `Basecamp`, `Discord`), and updated test assertions.
+- **Modified Files**:
+  - `applications/*.desktop`: Added explicit XDG category classifications.
+  - [`shell/plugins/app-grid/AppCategories.js`](file:///home/yurinero/Projects/effie-os/shell/plugins/app-grid/AppCategories.js): Added URL pattern recognition and explicit naming heuristics.
+  - [`test/shell.d/app-grid-test.sh`](file:///home/yurinero/Projects/effie-os/test/shell.d/app-grid-test.sh): Added category tests for web apps.
+- **Deleted Files**: None
+
 ### [2026-08-25] Traditional Application Viewer & Grid Launcher
 - **Author**: Antigravity Assistant & Development Team
 - **Summary**: Implemented a modern, graphical Application Viewer & Launcher overlay (`omarchy.app-grid`) in the Quickshell desktop environment with category filtering, real-time search, smooth keyboard navigation, top-bar launcher widget, and `SUPER + A` keybinding.

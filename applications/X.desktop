@@ -5,4 +5,5 @@ Exec=omarchy-launch-webapp https://x.com/
 Terminal=false
 Type=Application
 Icon=x
+Categories=Network;Chat;Feed;
 StartupNotify=true

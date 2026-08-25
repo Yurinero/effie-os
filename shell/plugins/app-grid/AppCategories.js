@@ -24,7 +24,7 @@ var CATEGORY_MAP = {
   ],
   productivity: [
     "office", "wordprocessor", "spreadsheet", "presentation",
-    "publishing", "finance", "calendar", "contactmanagement", "viewer", "dictionary"
+    "publishing", "finance", "calendar", "contactmanagement", "viewer", "dictionary", "projectmanagement"
   ],
   games: [
     "game", "actiongame", "adventuregame", "arcadegame", "boardgame",
@@ -34,7 +34,7 @@ var CATEGORY_MAP = {
   utilities: [
     "system", "utility", "settings", "packagemanager", "monitor",
     "security", "archiving", "compression", "filetools", "accessibility",
-    "core", "hardwaresettings", "filemanager", "filesystem", "calculator", "terminalemulator"
+    "core", "hardwaresettings", "filemanager", "filesystem", "calculator", "terminalemulator", "maps"
   ]
 }
 
@@ -58,20 +58,28 @@ function getCategoryForEntry(raw) {
   var entry = unwrapEntry(raw)
   if (!entry) return "utilities"
 
-  var cats = normalizeCategories(entry.categories)
-  var name = String((entry && entry.name) || "").toLowerCase()
-  var id = String((entry && entry.id) || "").toLowerCase()
+  var name = String((entry && entry.name) || "").toLowerCase().trim()
+  var id = String((entry && entry.id) || "").toLowerCase().trim()
   var comment = String((entry && entry.comment) || "").toLowerCase()
-  var fullText = name + " " + id + " " + comment
+  var exec = String((entry && entry.exec) || "").toLowerCase()
+  var fullText = [name, id, comment, exec].join(" ")
 
-  // Specific priority overrides for well-known apps
-  if (/\b(obs|studio|mpv|spotify|cliamp|pinta|gimp|kdenlive|inkscape|blender|audacity|vlc|aether|photos?|audio|music|video|player|camera)\b/i.test(fullText)) {
+  // 1. Direct Name / ID / Exec URL recognition
+  if (name === "x" || id === "x" || id === "x.desktop" || /x\.com|twitter/i.test(fullText)) {
+    return "internet"
+  }
+  if (name === "youtube" || id === "youtube" || id === "youtube.desktop" || /youtube\.com/i.test(fullText)) {
+    return "media"
+  }
+
+  // 2. High-priority keyword heuristics
+  if (/\b(obs|studio|mpv|spotify|cliamp|pinta|gimp|kdenlive|inkscape|blender|audacity|vlc|aether|youtube|photos?|audio|music|video|player|camera)\b/i.test(fullText)) {
     return "media"
   }
   if (/\b(obsidian|office|writer|calc|document|basecamp|notion|notes?|pdf|contacts?|calendar|tasks?)\b/i.test(fullText)) {
     return "productivity"
   }
-  if (/\b(chromium|firefox|brave|chrome|browser|discord|telegram|slack|whatsapp|signal|hey|zoom|mail|chat|messages?|twitter|x\.desktop)\b/i.test(fullText) || id === "x.desktop") {
+  if (/\b(chromium|firefox|brave|chrome|browser|discord|telegram|slack|whatsapp|signal|hey|zoom|mail|chat|messages?|twitter)\b/i.test(fullText)) {
     return "internet"
   }
   if (/\b(neovim|nvim|vscode|code|studio code|sublime|git|lazygit|debugger|compiler|opencode)\b/i.test(fullText)) {
@@ -81,7 +89,8 @@ function getCategoryForEntry(raw) {
     return "games"
   }
 
-  // Check XDG standard category mapping
+  // 3. XDG standard category mapping
+  var cats = normalizeCategories(entry.categories)
   for (var categoryKey in CATEGORY_MAP) {
     var keywords = CATEGORY_MAP[categoryKey]
     for (var i = 0; i < cats.length; i++) {
