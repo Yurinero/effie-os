@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=Superfile
+Comment=Modern terminal file manager
+Exec=xdg-terminal-exec --app-id=TUI.tile -e spf
+Terminal=false
+Type=Application
+Icon=superfile
+Categories=System;FileManager;Utility;
+StartupNotify=true
