@@ -9,33 +9,38 @@ var CATEGORIES = [
 ]
 
 var CATEGORY_MAP = {
-  internet: [
-    "network", "webbrowser", "email", "chat", "instantmessaging",
-    "feed", "filetransfer", "p2p", "remoteaccess", "telephony", "ircclient"
-  ],
-  development: [
-    "development", "ide", "texteditor", "debugger", "revisioncontrol",
-    "translation", "guidesigner", "webdevelopment", "terminalemulator", "building"
-  ],
   media: [
     "audiovideo", "audio", "video", "graphics", "photography",
     "rastergraphics", "vectorgraphics", "player", "recorder", "music",
     "midi", "2dgraphics", "3dgraphics", "art", "scanning", "audiovideoediting"
   ],
+  internet: [
+    "network", "webbrowser", "email", "chat", "instantmessaging",
+    "feed", "filetransfer", "p2p", "remoteaccess", "telephony", "ircclient", "news"
+  ],
+  development: [
+    "development", "ide", "texteditor", "debugger", "revisioncontrol",
+    "translation", "guidesigner", "webdevelopment", "building"
+  ],
   productivity: [
     "office", "wordprocessor", "spreadsheet", "presentation",
     "publishing", "finance", "calendar", "contactmanagement", "viewer", "dictionary"
-  ],
-  utilities: [
-    "system", "utility", "settings", "packagemanager", "monitor",
-    "security", "archiving", "compression", "filetools", "accessibility",
-    "core", "hardwaresettings", "filemanager", "filesystem", "calculator"
   ],
   games: [
     "game", "actiongame", "adventuregame", "arcadegame", "boardgame",
     "cardgame", "emulator", "logicgame", "roleplaying", "shooter",
     "simulation", "sportsgame", "strategygame"
+  ],
+  utilities: [
+    "system", "utility", "settings", "packagemanager", "monitor",
+    "security", "archiving", "compression", "filetools", "accessibility",
+    "core", "hardwaresettings", "filemanager", "filesystem", "calculator", "terminalemulator"
   ]
+}
+
+function unwrapEntry(row) {
+  if (!row) return null
+  return (row && row.entry) ? row.entry : row
 }
 
 function normalizeCategories(rawCategories) {
@@ -49,35 +54,39 @@ function normalizeCategories(rawCategories) {
   return []
 }
 
-function getCategoryForEntry(entry) {
+function getCategoryForEntry(raw) {
+  var entry = unwrapEntry(raw)
   if (!entry) return "utilities"
-  var cats = normalizeCategories(entry.categories)
-  var name = String(entry.name || "").toLowerCase()
-  var id = String(entry.id || "").toLowerCase()
-  var comment = String(entry.comment || "").toLowerCase()
 
+  var cats = normalizeCategories(entry.categories)
+  var name = String((entry && entry.name) || "").toLowerCase()
+  var id = String((entry && entry.id) || "").toLowerCase()
+  var comment = String((entry && entry.comment) || "").toLowerCase()
+  var fullText = name + " " + id + " " + comment
+
+  // Specific priority overrides for well-known apps
+  if (/\b(obs|studio|mpv|spotify|cliamp|pinta|gimp|kdenlive|inkscape|blender|audacity|vlc|aether|photos?|audio|music|video|player|camera)\b/i.test(fullText)) {
+    return "media"
+  }
+  if (/\b(obsidian|office|writer|calc|document|basecamp|notion|notes?|pdf|contacts?|calendar|tasks?)\b/i.test(fullText)) {
+    return "productivity"
+  }
+  if (/\b(chromium|firefox|brave|chrome|browser|discord|telegram|slack|whatsapp|signal|hey|zoom|mail|chat|messages?|twitter|x\.desktop)\b/i.test(fullText) || id === "x.desktop") {
+    return "internet"
+  }
+  if (/\b(neovim|nvim|vscode|code|studio code|sublime|git|lazygit|debugger|compiler|opencode)\b/i.test(fullText)) {
+    return "development"
+  }
+  if (/\b(game|steam|retro|play|heroic|lutris|battlenet|minecraft)\b/i.test(fullText)) {
+    return "games"
+  }
+
+  // Check XDG standard category mapping
   for (var categoryKey in CATEGORY_MAP) {
     var keywords = CATEGORY_MAP[categoryKey]
     for (var i = 0; i < cats.length; i++) {
       if (keywords.indexOf(cats[i]) !== -1) return categoryKey
     }
-  }
-
-  // Fallback heuristics based on name and ID keywords
-  if (/browser|web|chat|discord|whatsapp|signal|slack|telegram|mail|youtube|hey|zoom|messages/i.test(name + " " + id + " " + comment)) {
-    return "internet"
-  }
-  if (/code|nvim|editor|studio|dev|git|terminal|debug/i.test(name + " " + id + " " + comment)) {
-    return "development"
-  }
-  if (/media|video|audio|music|photo|player|mpv|obs|pinta|kdenlive|imv|spotify/i.test(name + " " + id + " " + comment)) {
-    return "media"
-  }
-  if (/office|calc|writer|document|notes|obsidian|contacts|calendar|basecamp/i.test(name + " " + id + " " + comment)) {
-    return "productivity"
-  }
-  if (/game|steam|retro|play|heroic|lutris|battlenet/i.test(name + " " + id + " " + comment)) {
-    return "games"
   }
 
   return "utilities"
@@ -90,7 +99,7 @@ function filterEntries(entries, categoryId, searchQuery) {
 
   var filtered = []
   for (var i = 0; i < list.length; i++) {
-    var entry = list[i]
+    var entry = unwrapEntry(list[i])
     if (!entry) continue
 
     // Category check
@@ -130,6 +139,7 @@ if (typeof module !== "undefined" && module.exports) {
   module.exports = {
     CATEGORIES: CATEGORIES,
     CATEGORY_MAP: CATEGORY_MAP,
+    unwrapEntry: unwrapEntry,
     getCategoryForEntry: getCategoryForEntry,
     filterEntries: filterEntries
   }
