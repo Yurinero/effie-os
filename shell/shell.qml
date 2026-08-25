@@ -44,7 +44,7 @@ ShellRoot {
       transparent: false,
       centerAnchor: "omarchy.clock",
       layout: {
-        left: [{ id: "omarchy.menu" }, { id: "omarchy.workspaces" }],
+        left: [{ id: "omarchy.menu" }, { id: "omarchy.app-grid" }, { id: "omarchy.workspaces" }],
         center: [{ id: "omarchy.clock", format: "dddd HH:mm" }],
         right: [{ id: "omarchy.audio" }]
       }
