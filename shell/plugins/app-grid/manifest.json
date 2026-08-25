@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "omarchy.app-grid",
+  "name": "Applications",
+  "version": "1.0.0",
+  "author": "Effie OS",
+  "description": "Application viewer and launcher with category filtering and search",
+  "kinds": [
+    "overlay",
+    "bar-widget"
+  ],
+  "keepLoaded": true,
+  "entryPoints": {
+    "overlay": "AppGrid.qml",
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Applications",
+    "description": "Opens the application launcher grid",
+    "category": "Launcher",
+    "allowMultiple": false
+  }
+}

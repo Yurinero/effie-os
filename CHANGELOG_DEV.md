@@ -6,12 +6,50 @@ This document tracks all modifications, additions, deletions, and pending tasks 
 
 ## 1. Activity Log
 
+### [2026-08-25] Traditional Application Viewer & Grid Launcher
+- **Author**: Antigravity Assistant & Development Team
+- **Summary**: Implemented a modern, graphical Application Viewer & Launcher overlay (`omarchy.app-grid`) in the Quickshell desktop environment with category filtering, real-time search, smooth keyboard navigation, top-bar launcher widget, and `SUPER + A` keybinding.
+- **Added Files**:
+  - [`shell/plugins/app-grid/manifest.json`](file:///home/yurinero/Projects/effie-os/shell/plugins/app-grid/manifest.json): Plugin manifest declaring `omarchy.app-grid` overlay and bar-widget entry points.
+  - [`shell/plugins/app-grid/AppCategories.js`](file:///home/yurinero/Projects/effie-os/shell/plugins/app-grid/AppCategories.js): Category mapping, metadata categorization, search filtering, and alphabetical sorting logic.
+  - [`shell/plugins/app-grid/AppGrid.qml`](file:///home/yurinero/Projects/effie-os/shell/plugins/app-grid/AppGrid.qml): Graphical grid viewer component with category pills, live search bar, rich application cards, and keyboard/mouse interaction.
+  - [`shell/plugins/app-grid/BarWidget.qml`](file:///home/yurinero/Projects/effie-os/shell/plugins/app-grid/BarWidget.qml): Top-bar launcher button widget.
+  - [`test/shell.d/app-grid-test.sh`](file:///home/yurinero/Projects/effie-os/test/shell.d/app-grid-test.sh): Automated test suite covering plugin registration, categorization, filtering, and sorting.
+- **Modified Files**:
+  - [`default/hypr/bindings/applications.lua`](file:///home/yurinero/Projects/effie-os/default/hypr/bindings/applications.lua): Bound `SUPER + A` to toggle `omarchy.app-grid`.
+- **Deleted Files**: None
+
+### [2026-08-25] Superfile TUI File Manager Integration
+- **Author**: Antigravity Assistant & Development Team
+- **Summary**: Added Superfile (`spf`) as a preinstalled base package and alternative terminal file manager, configured its `.desktop` entry, bundled its official SVG icon, mapped a quick access keybinding, and added a documentation link to its hotkey guide in the root menu.
+- **Added Files**:
+  - [`applications/Superfile.desktop`](file:///home/yurinero/Projects/effie-os/applications/Superfile.desktop): Desktop launcher entry for Superfile executing `xdg-terminal-exec --app-id=TUI.tile -e spf`.
+  - [`applications/icons/superfile.svg`](file:///home/yurinero/Projects/effie-os/applications/icons/superfile.svg): Official vector app icon for Superfile.
+- **Modified Files**:
+  - [`install/omarchy-base.packages`](file:///home/yurinero/Projects/effie-os/install/omarchy-base.packages): Added `superfile` to base packages.
+  - [`default/hypr/bindings/applications.lua`](file:///home/yurinero/Projects/effie-os/default/hypr/bindings/applications.lua): Bound `SUPER + SHIFT + ALT + F` to launch/focus Superfile.
+  - [`default/omarchy/omarchy-menu.jsonc`](file:///home/yurinero/Projects/effie-os/default/omarchy/omarchy-menu.jsonc): Added `learn.superfile` entry linking to `https://superfile.dev/list/hotkey-list/`.
+- **Deleted Files**: None
+
+### [2026-08-25] Effie OS Branding & Logo Overhaul
+- **Author**: Antigravity Assistant & Development Team
+- **Summary**: Replaced the legacy Omarchy logo assets with the new Effie OS wordmark across vector, terminal ASCII art, default boot/login graphics, and all theme palettes.
+- **Added Files**: None
+- **Modified Files**:
+  - [`logo.svg`](file:///home/yurinero/Projects/effie-os/logo.svg): Replaced root vector logo with the Effie wordmark SVG.
+  - [`logo.txt`](file:///home/yurinero/Projects/effie-os/logo.txt): Replaced terminal ASCII art with pixel-aligned Unicode half-block art of the `effie` wordmark.
+  - [`default/plymouth/logo.png`](file:///home/yurinero/Projects/effie-os/default/plymouth/logo.png): Updated default Plymouth boot splash logo in Effie green (`#a8cd76`).
+  - [`default/sddm/omarchy/logo.png`](file:///home/yurinero/Projects/effie-os/default/sddm/omarchy/logo.png): Updated default SDDM login screen logo in Effie green (`#a8cd76`).
+  - `themes/*/unlock.png`: Generated color-matched unlock logos for all 22 themes matching their respective `colors.toml` palette definitions.
+  - `themes/*/preview-unlock.png`: Regenerated all 22 1920x1080 Plymouth switcher mockups to reflect the new Effie logo and centered composition.
+- **Deleted Files**: None
+
 ### [2026-08-25] Branch Initialization & Mapping
 - **Author**: Antigravity Assistant & Development Team
 - **Summary**: Initialized new development branch `luna` branched from `quattro`. Explored repository architecture, packaging structure, build and ISO creation pipeline, user configuration seeding, manifest locations, and branding assets.
 - **Added Files**:
-  - [`REPO_MAP.md`](file:///d:/effie-os/REPO_MAP.md): Comprehensive repository architectural map, package breakdown, install/provisioning lifecycle, theming workflow, and extension points.
-  - [`CHANGELOG_DEV.md`](file:///d:/effie-os/CHANGELOG_DEV.md): Development change log and active task tracking document.
+  - [`REPO_MAP.md`](file:///home/yurinero/Projects/effie-os/REPO_MAP.md): Comprehensive repository architectural map, package breakdown, install/provisioning lifecycle, theming workflow, and extension points.
+  - [`CHANGELOG_DEV.md`](file:///home/yurinero/Projects/effie-os/CHANGELOG_DEV.md): Development change log and active task tracking document.
 - **Modified Files**: None
 - **Deleted Files**: None
 
@@ -22,20 +60,39 @@ This document tracks all modifications, additions, deletions, and pending tasks 
 ### Documentation & Architecture
 | File | Status | Description |
 |---|---|---|
-| [`REPO_MAP.md`](file:///d:/effie-os/REPO_MAP.md) | Added | Full repository map and integration guide |
-| [`CHANGELOG_DEV.md`](file:///d:/effie-os/CHANGELOG_DEV.md) | Added | Development change log and task tracker |
+| [`REPO_MAP.md`](file:///home/yurinero/Projects/effie-os/REPO_MAP.md) | Added | Full repository map and integration guide |
+| [`CHANGELOG_DEV.md`](file:///home/yurinero/Projects/effie-os/CHANGELOG_DEV.md) | Added | Development change log and task tracker |
 
 ### Branding & Assets
-*(No changes yet)*
+| File | Status | Description |
+|---|---|---|
+| [`logo.svg`](file:///home/yurinero/Projects/effie-os/logo.svg) | Modified | Replaced root vector logo with Effie wordmark |
+| [`logo.txt`](file:///home/yurinero/Projects/effie-os/logo.txt) | Modified | Replaced terminal ASCII art with Unicode half-block art |
+| [`default/plymouth/logo.png`](file:///home/yurinero/Projects/effie-os/default/plymouth/logo.png) | Modified | Default Plymouth boot splash logo |
+| [`default/sddm/omarchy/logo.png`](file:///home/yurinero/Projects/effie-os/default/sddm/omarchy/logo.png) | Modified | Default SDDM login screen logo |
+| `themes/*/unlock.png` | Modified | Generated color-matched unlock logos for all 22 themes |
+| `themes/*/preview-unlock.png` | Modified | Regenerated Plymouth switcher mockups for all 22 themes |
+| [`applications/icons/superfile.svg`](file:///home/yurinero/Projects/effie-os/applications/icons/superfile.svg) | Added | Official Superfile vector app icon |
 
 ### Packages & Manifests
-*(No changes yet)*
+| File | Status | Description |
+|---|---|---|
+| [`install/omarchy-base.packages`](file:///home/yurinero/Projects/effie-os/install/omarchy-base.packages) | Modified | Added `superfile` package |
 
 ### System & User Configuration
 *(No changes yet)*
 
 ### Desktop Shell & UI
-*(No changes yet)*
+| File | Status | Description |
+|---|---|---|
+| [`applications/Superfile.desktop`](file:///home/yurinero/Projects/effie-os/applications/Superfile.desktop) | Added | Desktop application launcher for Superfile |
+| [`default/hypr/bindings/applications.lua`](file:///home/yurinero/Projects/effie-os/default/hypr/bindings/applications.lua) | Modified | Added `SUPER + A` for App Grid and `SUPER + SHIFT + ALT + F` for Superfile |
+| [`default/omarchy/omarchy-menu.jsonc`](file:///home/yurinero/Projects/effie-os/default/omarchy/omarchy-menu.jsonc) | Modified | Added Superfile hotkeys guide link under Learn menu |
+| [`shell/plugins/app-grid/manifest.json`](file:///home/yurinero/Projects/effie-os/shell/plugins/app-grid/manifest.json) | Added | Application Grid plugin manifest |
+| [`shell/plugins/app-grid/AppCategories.js`](file:///home/yurinero/Projects/effie-os/shell/plugins/app-grid/AppCategories.js) | Added | Application categorization and search filter module |
+| [`shell/plugins/app-grid/AppGrid.qml`](file:///home/yurinero/Projects/effie-os/shell/plugins/app-grid/AppGrid.qml) | Added | Graphical application launcher overlay |
+| [`shell/plugins/app-grid/BarWidget.qml`](file:///home/yurinero/Projects/effie-os/shell/plugins/app-grid/BarWidget.qml) | Added | Top-bar launcher icon button widget |
+| [`test/shell.d/app-grid-test.sh`](file:///home/yurinero/Projects/effie-os/test/shell.d/app-grid-test.sh) | Added | Automated test suite for App Grid plugin |
 
 ### CLI & Tooling
 *(No changes yet)*
@@ -45,10 +102,12 @@ This document tracks all modifications, additions, deletions, and pending tasks 
 ## 3. Pending & Planned Tasks
 
 ### Backlog
-- [ ] Define Effie OS branding and customization goals (logos, colors, Plymouth splash, SDDM, default wallpaper).
-- [ ] Identify custom packages or package removals to update in [`install/omarchy-base.packages`](file:///d:/effie-os/install/omarchy-base.packages) and [`install/omarchy-other.packages`](file:///d:/effie-os/install/omarchy-other.packages).
-- [ ] Review default desktop configurations in [`config/`](file:///d:/effie-os/config) for Effie OS specific presets.
-- [ ] Review and adjust default themes in [`themes/`](file:///d:/effie-os/themes) and templates in [`default/themed/`](file:///d:/effie-os/default/themed).
+- [x] Update core branding and logo assets (SVG, ASCII art, Plymouth splash, SDDM, theme unlock logos).
+- [x] Add Superfile terminal file manager (base package, desktop launcher, app icon, keybinding, hotkey documentation link).
+- [x] Implement Traditional Application Viewer & Grid Launcher plugin (`omarchy.app-grid`, categories, search, top-bar button, `SUPER + A`).
+- [ ] Define wallpaper sets and default background imagery for Effie OS.
+- [ ] Review default desktop configurations in [`config/`](file:///home/yurinero/Projects/effie-os/config) for Effie OS specific presets.
+- [ ] Review and adjust default themes in [`themes/`](file:///home/yurinero/Projects/effie-os/themes) and templates in [`default/themed/`](file:///home/yurinero/Projects/effie-os/default/themed).
 - [ ] Verify test suite passes with `./test/all` (or `./test/cli` and `./test/shell`).
 
 ---
