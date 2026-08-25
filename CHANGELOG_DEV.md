@@ -6,6 +6,16 @@ This document tracks all modifications, additions, deletions, and pending tasks 
 
 ## 1. Activity Log
 
+### [2026-08-26] JetBrains Toolbox Lazy Installer & Menu Integration
+- **Author**: Antigravity Assistant & Development Team
+- **Summary**: Implemented on-demand lazy installer for JetBrains Toolbox with local archive caching (`~/Downloads/jetbrains-toolbox-*.tar.gz`), automatic official download fallback, `.desktop` launcher creation, SVG icon registration, and menu integration under **Install > Editor** and **Install > Development**.
+- **Added Files**:
+  - [`bin/omarchy-install-jetbrains-toolbox`](file:///home/yurinero/Projects/effie-os/bin/omarchy-install-jetbrains-toolbox): Automated JetBrains Toolbox download, extraction, path linking, and launch script.
+- **Modified Files**:
+  - [`default/omarchy/omarchy-menu.jsonc`](file:///home/yurinero/Projects/effie-os/default/omarchy/omarchy-menu.jsonc): Added JetBrains Toolbox menu items under `install.editor` and `install.development`.
+  - [`shell/plugins/app-grid/AppCategories.js`](file:///home/yurinero/Projects/effie-os/shell/plugins/app-grid/AppCategories.js): Added JetBrains ecosystem keywords to development categorization.
+- **Deleted Files**: None
+
 ### [2026-08-26] Project Contributors & Co-Authorship Setup
 - **Author**: Yurinero & Antigravity (Google DeepMind)
 - **Summary**: Established official project co-authorship transparency: added `CONTRIBUTORS.md`, updated `README.md` acknowledgments, configured Git commit template with `Co-authored-by: Antigravity <antigravity@google.com>` trailer.

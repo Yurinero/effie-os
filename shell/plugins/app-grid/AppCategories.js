@@ -82,7 +82,7 @@ function getCategoryForEntry(raw) {
   if (/\b(chromium|firefox|brave|chrome|browser|discord|telegram|slack|whatsapp|signal|hey|zoom|mail|chat|messages?|twitter)\b/i.test(fullText)) {
     return "internet"
   }
-  if (/\b(neovim|nvim|vscode|code|studio code|sublime|git|lazygit|debugger|compiler|opencode)\b/i.test(fullText)) {
+  if (/\b(neovim|nvim|vscode|code|studio code|sublime|git|lazygit|debugger|compiler|opencode|jetbrains|toolbox|idea|pycharm|clion|webstorm|rider|rustrover|goland)\b/i.test(fullText)) {
     return "development"
   }
   if (/\b(game|steam|retro|play|heroic|lutris|battlenet|minecraft)\b/i.test(fullText)) {

@@ -1,0 +1,79 @@
+#!/bin/bash
+
+# omarchy:summary=Install JetBrains Toolbox app manager and configure launcher
+
+set -euo pipefail
+
+TARGET_DIR="$HOME/.local/share/JetBrains/Toolbox/bin"
+BIN_DIR="$HOME/.local/bin"
+DESKTOP_DIR="$HOME/.local/share/applications"
+ICONS_DIR="$HOME/.local/share/icons/hicolor/scalable/apps"
+
+mkdir -p "$TARGET_DIR" "$BIN_DIR" "$DESKTOP_DIR" "$ICONS_DIR"
+
+# 1. Locate local tarball or download latest from JetBrains
+TARBALL=""
+if compgen -G "$HOME/Downloads/jetbrains-toolbox-*.tar.gz" >/dev/null; then
+  TARBALL=$(ls -t "$HOME/Downloads"/jetbrains-toolbox-*.tar.gz 2>/dev/null | head -1)
+  echo "Found local JetBrains Toolbox archive: $TARBALL"
+fi
+
+TMP_DIR=$(mktemp -d)
+trap 'rm -rf "$TMP_DIR"' EXIT
+
+if [[ -z "$TARBALL" || ! -f "$TARBALL" ]]; then
+  echo "Downloading JetBrains Toolbox from official JetBrains servers..."
+  DOWNLOAD_URL="https://data.services.jetbrains.com/products/download?platform=linux&code=TBA"
+  TARBALL="$TMP_DIR/jetbrains-toolbox.tar.gz"
+  curl -fsSL --progress-bar -L "$DOWNLOAD_URL" -o "$TARBALL"
+fi
+
+echo "Extracting JetBrains Toolbox..."
+tar -xzf "$TARBALL" -C "$TMP_DIR"
+
+# Locate extracted bin directory
+EXTRACTED_ROOT=$(find "$TMP_DIR" -mindepth 1 -maxdepth 1 -type d | head -1)
+if [[ -z "$EXTRACTED_ROOT" || ! -d "$EXTRACTED_ROOT" ]]; then
+  echo "ERROR: Failed to extract JetBrains Toolbox archive." >&2
+  exit 1
+fi
+
+if [[ -d "$EXTRACTED_ROOT/bin" ]]; then
+  SRC_DIR="$EXTRACTED_ROOT/bin"
+else
+  SRC_DIR="$EXTRACTED_ROOT"
+fi
+
+# 2. Install files into ~/.local/share/JetBrains/Toolbox/bin/
+cp -a "$SRC_DIR/." "$TARGET_DIR/"
+chmod +x "$TARGET_DIR/jetbrains-toolbox"
+
+# 3. Create symlink in ~/.local/bin/
+ln -sf "$TARGET_DIR/jetbrains-toolbox" "$BIN_DIR/jetbrains-toolbox"
+
+# 4. Install vector icon
+if [[ -f "$TARGET_DIR/toolbox.svg" ]]; then
+  cp "$TARGET_DIR/toolbox.svg" "$ICONS_DIR/jetbrains-toolbox.svg"
+fi
+
+# 5. Create desktop launcher entry
+cat > "$DESKTOP_DIR/jetbrains-toolbox.desktop" <<'EOF'
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=JetBrains Toolbox
+GenericName=IDE Manager
+Comment=Manage JetBrains IDEs and developer tools
+Exec=jetbrains-toolbox %u
+Icon=jetbrains-toolbox
+Terminal=false
+Categories=Development;IDE;
+StartupNotify=true
+EOF
+
+chmod +x "$DESKTOP_DIR/jetbrains-toolbox.desktop"
+
+echo "JetBrains Toolbox successfully installed!"
+omarchy-notification-send "JetBrains Toolbox" "Installation complete. Starting application..." || true
+
+setsid uwsm-app -- gtk-launch jetbrains-toolbox >/dev/null 2>&1 &
