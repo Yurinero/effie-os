@@ -6,6 +6,15 @@ This document tracks all modifications, additions, deletions, and pending tasks 
 
 ## 1. Activity Log
 
+### [2026-08-26] Installation Branding & Fastfetch ASCII Wordmark
+- **Author**: Antigravity Assistant & Development Team
+- **Summary**: Applied the "powered by Omarchy" subtitle branding specifically to the installer/login screens (`default/plymouth/logo.png`, `default/sddm/omarchy/logo.png`) in Effie green (`#a8cd76`) and rendered a pixel-aligned Unicode half-block ASCII version for `fastfetch` and the system about window (`logo.txt`, `icon.txt`).
+- **Modified Files**:
+  - [`default/plymouth/logo.png`](file:///home/yurinero/Projects/effie-os/default/plymouth/logo.png): Updated boot splash logo with subtitle.
+  - [`default/sddm/omarchy/logo.png`](file:///home/yurinero/Projects/effie-os/default/sddm/omarchy/logo.png): Updated login screen logo with subtitle.
+  - [`logo.txt`](file:///home/yurinero/Projects/effie-os/logo.txt) & [`icon.txt`](file:///home/yurinero/Projects/effie-os/icon.txt): Updated fastfetch and screensaver ASCII art.
+- **Deleted Files**: None
+
 ### [2026-08-26] Kate Advanced Text Editor Lazy Installer
 - **Author**: Antigravity Assistant & Development Team
 - **Summary**: Added Kate as an on-demand lazy load editor option under **Install > Editor** executing `omarchy-install-and-launch Kate kate org.kde.kate` with floating terminal presentation and automatic launch on completion.
