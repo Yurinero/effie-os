@@ -74,6 +74,24 @@ its screenshots are also hosted.
 - [Dual Boot Install](manual/50-dual-boot-install.md)
 - [Unattended Installs](manual/51-unattended-installs.md)
 
+## Development & Testing
+
+Effie OS includes a built-in packaging pipeline and QEMU virtual machine test harness:
+
+- **Packaging & ISO Build Guide**: [`docs/packaging-and-qemu.md`](docs/packaging-and-qemu.md)
+- **Developer CLI**: [`scripts/effie-dev`](scripts/effie-dev)
+
+```bash
+# Build local packages into repository:
+./scripts/effie-dev pkg
+
+# Build complete bootable live ISO:
+./scripts/effie-dev iso
+
+# Boot ISO under QEMU with KVM acceleration & UEFI:
+./scripts/effie-dev qemu
+```
+
 ## License
 
 Omarchy is released under the [MIT License](https://opensource.org/licenses/MIT).

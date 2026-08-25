@@ -1,0 +1,99 @@
+# Maintainer: Yuri <yuri@effie-os.local>
+pkgname='omarchy'
+pkgver=4.0.0.alpha
+pkgrel=1
+pkgdesc='Effie OS (Omarchy fork) - runtime userland, desktop shell, and tooling'
+arch=('any')
+url='https://github.com/Yurinero/effie-os'
+license=('MIT')
+provides=('effie-os')
+conflicts=('omarchy-dev' 'effie-os-dev')
+
+depends=(
+  'omarchy-keyring'
+  "omarchy-settings=${pkgver}"
+  'hyprland'
+  'quickshell'
+  'uwsm'
+  'sddm'
+  'xdg-desktop-portal-hyprland'
+  'wireplumber'
+  'pipewire'
+  'gnome-keyring'
+  'gum'
+  'jq'
+  'git'
+  'perl'
+  'fakeroot'
+  'pacman-contrib'
+  'ttf-jetbrains-mono-nerd-basic'
+)
+
+optdepends=(
+  'limine: Bootloader for installed system'
+  'limine-mkinitcpio-hook: Bootloader hook for mkinitcpio'
+  'limine-snapper-sync: Boot-entry sync for snapper snapshots'
+  'snapper: Btrfs snapshot management'
+)
+
+makedepends=(
+  'git'
+)
+
+prepare() {
+  if [[ -n "${OMARCHY_SRC:-}" ]]; then
+    rm -rf "$srcdir/omarchy"
+    mkdir -p "$srcdir/omarchy"
+    tar -C "${OMARCHY_SRC}" --exclude='./build' --exclude='./release' --exclude='./.git' -cf - . | tar -C "$srcdir/omarchy" -xf -
+  fi
+}
+
+package() {
+  cd "$srcdir/omarchy"
+
+  # Runtime binaries
+  install -d "$pkgdir/usr/bin" "$pkgdir/usr/share/omarchy/bin"
+  for bin in bin/*; do
+    [[ -f $bin ]] || continue
+    local base
+    base=$(basename "$bin")
+    case "$base" in
+      omarchy-debug|omarchy-debug-idle|omarchy-upload-log)
+        continue
+        ;;
+    esac
+    install -Dm755 "$bin" "$pkgdir/usr/bin/$base"
+    ln -s "/usr/bin/$base" "$pkgdir/usr/share/omarchy/bin/$base"
+  done
+
+  install -d "$pkgdir/usr/share/omarchy"
+
+  # ALPM hooks
+  if compgen -G 'default/libalpm/hooks/*.hook' >/dev/null; then
+    install -d "$pkgdir/usr/share/libalpm/hooks"
+    for hook in default/libalpm/hooks/*.hook; do
+      install -Dm644 "$hook" "$pkgdir/usr/share/libalpm/hooks/$(basename "$hook")"
+    done
+  fi
+
+  # Target-side scripts, themes, migrations, shell
+  [[ -d install ]] && cp -a install "$pkgdir/usr/share/omarchy/"
+  [[ -d themes ]] && cp -a themes "$pkgdir/usr/share/omarchy/"
+  [[ -d migrations ]] && cp -a migrations "$pkgdir/usr/share/omarchy/"
+
+  if compgen -G 'migrations/*.sh' >/dev/null; then
+    install -d "$pkgdir/etc/skel/.local/state/omarchy/migrations"
+    for migration in migrations/*.sh; do
+      touch "$pkgdir/etc/skel/.local/state/omarchy/migrations/$(basename "$migration")"
+    done
+  fi
+
+  [[ -d shell ]] && cp -a shell "$pkgdir/usr/share/omarchy/"
+
+  # Version file
+  if [[ -f version ]]; then
+    install -Dm644 version "$pkgdir/usr/share/omarchy/version"
+  else
+    echo "$pkgver" > "$pkgdir/usr/share/omarchy/version"
+  fi
+}

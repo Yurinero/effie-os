@@ -1,0 +1,11 @@
+#!/bin/sh
+# Safe limine-install wrapper for live archiso environment
+# If no valid EFI system partition exists, no-op cleanly with success
+if [[ ! -d /sys/firmware/efi ]] || [[ ! -f /etc/default/limine ]]; then
+    exit 0
+fi
+
+if [[ -x /usr/bin/limine-install ]]; then
+    exec /usr/bin/limine-install "$@"
+fi
+exit 0

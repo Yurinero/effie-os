@@ -1,0 +1,28 @@
+_etc_overrides_apply() {
+  echo "Applying Effie OS / Omarchy etc-overrides..."
+
+  install -d /etc/plymouth /etc/security /etc/skel
+
+  rm -f /etc/os-release
+  [[ -f /usr/share/omarchy/etc-overrides/os-release ]] && cp -f /usr/share/omarchy/etc-overrides/os-release /etc/os-release
+  [[ -f /usr/share/omarchy/etc-overrides/security-faillock.conf ]] && cp -f /usr/share/omarchy/etc-overrides/security-faillock.conf /etc/security/faillock.conf
+  [[ -f /usr/share/omarchy/etc-overrides/nsswitch.conf ]] && cp -f /usr/share/omarchy/etc-overrides/nsswitch.conf /etc/nsswitch.conf
+  if [[ -f /etc/cups/cups-browsed.conf && -f /usr/share/omarchy/etc-overrides/cups-cups-browsed.conf ]]; then
+    install -d /etc/cups
+    cp -f /usr/share/omarchy/etc-overrides/cups-cups-browsed.conf /etc/cups/cups-browsed.conf
+    chmod 0644 /etc/cups/cups-browsed.conf
+  fi
+  [[ -f /usr/share/omarchy/etc-overrides/plymouth-plymouthd.conf ]] && cp -f /usr/share/omarchy/etc-overrides/plymouth-plymouthd.conf /etc/plymouth/plymouthd.conf
+  [[ -f /usr/share/omarchy/etc-overrides/dot.bashrc ]] && cp -f /usr/share/omarchy/etc-overrides/dot.bashrc /etc/skel/.bashrc
+
+  chmod 0644 /etc/os-release /etc/security/faillock.conf /etc/nsswitch.conf \
+             /etc/plymouth/plymouthd.conf /etc/skel/.bashrc 2>/dev/null || true
+}
+
+post_install() {
+  _etc_overrides_apply
+}
+
+post_upgrade() {
+  _etc_overrides_apply
+}

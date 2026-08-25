@@ -1,0 +1,92 @@
+#!/bin/bash
+#
+# Effie OS Developer CLI Tool
+# Central entrypoint for packaging, ISO generation, testing, and QEMU execution.
+#
+set -euo pipefail
+
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+ROOT=$(cd -- "$SCRIPT_DIR/.." && pwd)
+
+usage() {
+  cat <<USAGE
+Effie OS Developer Utility
+
+Usage: $(basename "$0") <command> [options]
+
+Commands:
+  pkg              Build omarchy-settings and omarchy Arch packages from local source
+  iso              Build full bootable live ISO image using mkarchiso
+  qemu, run        Launch Effie OS in QEMU (UEFI + KVM + VirtIO GPU)
+  reset-disk       Purge the virtual test disk and UEFI NVRAM state to test a fresh install
+  purge-disk       Alias for reset-disk
+  test             Run CLI and Shell test suites
+  acceptance       Run graphical acceptance tests in disposable VM
+  clean            Remove all temporary build, packaging, and work directories
+  help             Show this help message
+
+Quick Examples:
+  # 1. Build packages only:
+  ./scripts/effie-dev pkg
+
+  # 2. Build complete ISO:
+  ./scripts/effie-dev iso
+
+  # 3. Test in QEMU:
+  ./scripts/effie-dev qemu
+
+  # 4. Start a fresh installation on a clean 40G disk:
+  ./scripts/effie-dev reset-disk
+  ./scripts/effie-dev qemu --create-disk 40G
+
+  # 5. Run test suite:
+  ./scripts/effie-dev test
+USAGE
+}
+
+if (( $# == 0 )); then
+  usage
+  exit 0
+fi
+
+COMMAND="$1"
+shift
+
+case "$COMMAND" in
+  pkg|build-pkg|packages)
+    exec "$ROOT/packaging/build-packages.sh" "$@"
+    ;;
+  iso|build-iso)
+    exec "$ROOT/scripts/build-iso.sh" "$@"
+    ;;
+  qemu|run|boot)
+    exec "$ROOT/scripts/run-qemu.sh" "$@"
+    ;;
+  test|tests)
+    echo "==> Running CLI and Shell test suites..."
+    exec "$ROOT/test/all" "$@"
+    ;;
+  acceptance)
+    echo "==> Running QEMU VM with acceptance test trigger..."
+    exec "$ROOT/scripts/run-qemu.sh" --run-acceptance "$@"
+    ;;
+  reset-disk|purge-disk|clean-disk)
+    echo "==> Purging existing virtual test disks and UEFI NVRAM state..."
+    rm -f "$ROOT/build"/effie-test-disk* /tmp/omarchy-iso-boot* /tmp/OVMF_VARS*
+    echo "Done. Next QEMU launch will boot a fresh clean drive."
+    ;;
+  clean)
+    echo "==> Cleaning build artifacts and caches..."
+    rm -rf "$ROOT/build"
+    echo "Done."
+    ;;
+  -h|--help|help)
+    usage
+    exit 0
+    ;;
+  *)
+    echo "Unknown command: $COMMAND" >&2
+    usage
+    exit 1
+    ;;
+esac

@@ -2,3 +2,12 @@
 # Python bytecode (orchestrator)
 __pycache__/
 *.pyc
+
+# Effie OS / Archiso build and packaging outputs
+build/
+release/
+*.iso
+*.sha256
+*.qcow2
+*.pkg.tar.*
+

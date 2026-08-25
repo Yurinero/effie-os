@@ -1,0 +1,11 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Type = Package
+Target = *
+
+[Action]
+Description = Skipping Limine snapper lock in live ISO build environment...
+When = PreTransaction
+Exec = /usr/bin/true

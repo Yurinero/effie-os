@@ -1,0 +1,11 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Type = Package
+Target = *
+
+[Action]
+Description = Skipping Limine mkinitcpio post hook in live ISO build environment...
+When = PostTransaction
+Exec = /usr/bin/true

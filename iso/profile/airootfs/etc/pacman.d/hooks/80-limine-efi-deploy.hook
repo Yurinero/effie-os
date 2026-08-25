@@ -1,0 +1,11 @@
+# Mask limine-efi-deploy hook in live ISO environment
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = *
+
+[Action]
+Description = Skipping Limine EFI deployment in live ISO build environment...
+When = PostTransaction
+Exec = /usr/bin/true
