@@ -6,6 +6,15 @@ This document tracks all modifications, additions, deletions, and pending tasks 
 
 ## 1. Activity Log
 
+### [2026-08-26] Project Contributors & Co-Authorship Setup
+- **Author**: Yurinero & Antigravity (Google DeepMind)
+- **Summary**: Established official project co-authorship transparency: added `CONTRIBUTORS.md`, updated `README.md` acknowledgments, configured Git commit template with `Co-authored-by: Antigravity <antigravity@google.com>` trailer.
+- **Added Files**:
+  - [`CONTRIBUTORS.md`](file:///home/yurinero/Projects/effie-os/CONTRIBUTORS.md): Project contributor roll and authorship documentation.
+- **Modified Files**:
+  - [`README.md`](file:///home/yurinero/Projects/effie-os/README.md): Added Acknowledgments section.
+- **Deleted Files**: None
+
 ### [2026-08-26] App Grid Categorization & WebApp XDG Metadata Fix
 - **Author**: Antigravity Assistant & Development Team
 - **Summary**: Added standard XDG `Categories=` metadata across all web application `.desktop` files, enhanced `AppCategories.js` URL/execution pattern matching for single-letter and web targets (`X`, `YouTube`, `Basecamp`, `Discord`), and updated test assertions.
