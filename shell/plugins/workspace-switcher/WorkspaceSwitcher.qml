@@ -72,12 +72,73 @@ Item {
     else root.open("{}")
   }
 
-  function resolveIcon(appClass) {
-    var raw = String(appClass || "").trim()
-    if (!raw) return ""
+  function findDesktopIcon(appClass, title) {
+    var rawClass = String(appClass || "").trim().toLowerCase()
+    var rawTitle = String(title || "").trim().toLowerCase()
+    if (!rawClass && !rawTitle) return ""
 
+    var apps = (typeof DesktopEntries !== "undefined" && DesktopEntries.applications && DesktopEntries.applications.values) ? DesktopEntries.applications.values : []
+
+    // 1. Exact match on entry.id or entry.name or entry.icon
+    for (var i = 0; i < apps.length; i++) {
+      var app = apps[i]
+      if (!app) continue
+      var appId = String(app.id || "").toLowerCase()
+      var appName = String(app.name || "").toLowerCase()
+      var appIcon = String(app.icon || "").toLowerCase()
+
+      if (rawClass.length > 0 && (appId === rawClass || appName === rawClass || appIcon === rawClass)) {
+        return app.icon
+      }
+    }
+
+    // 2. Substring / prefix / suffix match (e.g. "godot_engine" -> "godot", "zen-alpha" -> "zen-browser", "code-oss" -> "code")
+    for (var j = 0; j < apps.length; j++) {
+      var entry = apps[j]
+      if (!entry) continue
+      var eId = String(entry.id || "").toLowerCase()
+      var eName = String(entry.name || "").toLowerCase()
+      var eIcon = String(entry.icon || "").toLowerCase()
+
+      if (rawClass.length > 0) {
+        if (rawClass.indexOf(eId) !== -1 || eId.indexOf(rawClass) !== -1) return entry.icon
+        if (rawClass.indexOf(eIcon) !== -1 || eIcon.indexOf(rawClass) !== -1) return entry.icon
+        if (rawClass.indexOf(eName) !== -1 || eName.indexOf(rawClass) !== -1) return entry.icon
+      }
+
+      if (rawTitle.length > 0) {
+        if (rawTitle.indexOf(eName) !== -1 || eName.indexOf(rawTitle) !== -1) return entry.icon
+        if (rawTitle.indexOf(eId) !== -1) return entry.icon
+      }
+    }
+
+    return ""
+  }
+
+  function resolveIcon(appClass, title) {
+    var raw = String(appClass || "").trim()
+    var rawTitle = String(title || "").trim()
+    if (!raw && !rawTitle) return ""
+
+    // 1. Look up authoritative desktop entry icon
+    var desktopIcon = root.findDesktopIcon(raw, rawTitle)
+    if (desktopIcon) {
+      var dSrc = ""
+      if (root.shell && root.shell.appLibrary) {
+        dSrc = root.shell.appLibrary.iconSource(desktopIcon)
+      }
+      if (!dSrc || dSrc.indexOf("application-x-executable") !== -1) {
+        var themed = Quickshell.iconPath(desktopIcon, true)
+        if (themed) dSrc = themed
+      }
+      if (dSrc && dSrc.indexOf("application-x-executable") === -1) {
+        return dSrc.charAt(0) === "/" ? Util.fileUrl(dSrc) : dSrc
+      }
+    }
+
+    // 2. Direct AppLibrary resolution
     var src = ""
-    if (root.shell && root.shell.appLibrary) {
+    if (root.shell && root.shell.appLibrary && raw) {
       src = root.shell.appLibrary.iconSource(raw)
       if (!src || src.indexOf("application-x-executable") !== -1) {
         var lowerSrc = root.shell.appLibrary.iconSource(raw.toLowerCase())
@@ -85,10 +146,17 @@ Item {
       }
     }
 
+    // 3. Quickshell themed path fallback
     if (!src || src.indexOf("application-x-executable") !== -1) {
-      var themed = Quickshell.iconPath(raw, true)
-      if (!themed) themed = Quickshell.iconPath(raw.toLowerCase(), true)
-      if (themed) src = themed
+      if (raw) {
+        var themedRaw = Quickshell.iconPath(raw, true)
+        if (!themedRaw) themedRaw = Quickshell.iconPath(raw.toLowerCase(), true)
+        if (themedRaw) src = themedRaw
+      }
+      if (!src && rawTitle) {
+        var themedTitle = Quickshell.iconPath(rawTitle.toLowerCase(), true)
+        if (themedTitle) src = themedTitle
+      }
     }
 
     if (src && src.charAt(0) === "/") {
@@ -130,8 +198,7 @@ Item {
           var tl = toplevels[t]
           var appClass = String((tl && (tl.waylandClass || tl.class || tl.initialClass || tl.appId)) || "")
           var title = String((tl && (tl.title || tl.initialTitle)) || appClass)
-          var iconSrc = root.resolveIcon(appClass)
-          if (!iconSrc && title) iconSrc = root.resolveIcon(title)
+          var iconSrc = root.resolveIcon(appClass, title)
 
           icons.push({
             appClass: appClass,
@@ -246,7 +313,7 @@ Item {
       id: card
       anchors.centerIn: parent
       width: Math.min(contentRow.implicitWidth + card.contentLeftInset + card.contentRightInset, panel.width - Style.gapsOut * 2)
-      height: Style.space(180)
+      height: Style.space(210)
       color: root.background
       borderSpec: root.borderSpec
       radius: root.cornerRadius
@@ -298,8 +365,8 @@ Item {
               required property var modelData
               required property int index
 
-              width: Style.space(120)
-              height: Style.space(100)
+              width: Style.space(145)
+              height: Style.space(120)
 
               readonly property bool isSelected: (root.selectedIndex === index)
               readonly property bool isFocused: modelData.isFocused
@@ -350,7 +417,7 @@ Item {
                   // Active App Icons Row
                   Item {
                     width: parent.width
-                    height: Style.space(48)
+                    height: Style.space(56)
 
                     Row {
                       anchors.centerIn: parent
@@ -362,14 +429,14 @@ Item {
 
                         delegate: Item {
                           required property var modelData
-                          width: Style.space(28)
-                          height: Style.space(28)
+                          width: Style.space(36)
+                          height: Style.space(36)
 
                           Image {
                             id: appImg
                             anchors.fill: parent
-                            sourceSize.width: Style.space(28)
-                            sourceSize.height: Style.space(28)
+                            sourceSize.width: Style.space(36)
+                            sourceSize.height: Style.space(36)
                             fillMode: Image.PreserveAspectFit
                             source: modelData.iconSource
                             smooth: true
@@ -378,10 +445,10 @@ Item {
 
                           Text {
                             anchors.centerIn: parent
-                            visible: appImg.status === Image.Error || (appImg.status === Image.Null && appImg.source == "")
+                            visible: modelData.iconSource.length === 0 || appImg.status === Image.Error
                             text: "󰀻"
                             font.family: root.fontFamily
-                            font.pixelSize: Style.font.caption
+                            font.pixelSize: Style.font.title
                             color: isSelected ? root.selectedText : root.foreground
                           }
                         }
