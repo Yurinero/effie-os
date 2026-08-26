@@ -25,5 +25,6 @@ assert(qmlContent.includes('import Quickshell.Hyprland'), 'WorkspaceSwitcher imp
 
 // Hyprland keybindings assertions
 assert(tilingLua.includes('omarchy.workspace-switcher'), 'tiling.lua binds workspace-switcher overlay')
+assert(tilingLua.includes('ALT + TAB'), 'tiling.lua binds ALT+TAB to workspace switcher')
 assert(tilingLua.includes('ALT + SPACE') || tilingLua.includes('SUPER + TAB'), 'tiling.lua binds ALT+SPACE or SUPER+TAB')
 JS

@@ -33,6 +33,9 @@ Item {
 
   function open(payloadJson) {
     root.opened = true
+    if (root.shell && root.shell.appLibrary && typeof root.shell.appLibrary.refreshIcons === "function") {
+      root.shell.appLibrary.refreshIcons()
+    }
     root.reloadWorkspaces()
 
     // Find current focused workspace index
@@ -69,8 +72,36 @@ Item {
     else root.open("{}")
   }
 
+  function resolveIcon(appClass) {
+    var raw = String(appClass || "").trim()
+    if (!raw) return Quickshell.iconPath("application-x-executable", true)
+
+    var src = ""
+    if (root.shell && root.shell.appLibrary) {
+      src = root.shell.appLibrary.iconSource(raw)
+      if (!src || src.indexOf("application-x-executable") !== -1) {
+        var lowerSrc = root.shell.appLibrary.iconSource(raw.toLowerCase())
+        if (lowerSrc && lowerSrc.indexOf("application-x-executable") === -1) src = lowerSrc
+      }
+    }
+
+    if (!src || src.indexOf("application-x-executable") !== -1) {
+      var themed = Quickshell.iconPath(raw, true)
+      if (!themed) themed = Quickshell.iconPath(raw.toLowerCase(), true)
+      if (themed) {
+        src = (themed.indexOf("file://") === 0 || themed.indexOf("image://") === 0) ? themed : Util.fileUrl(themed)
+      }
+    }
+
+    if (!src || src.indexOf("application-x-executable") !== -1) {
+      src = "image://icon/" + raw
+    }
+
+    return src
+  }
+
   function reloadWorkspaces() {
-    var values = Hyprland.workspaces.values
+    var values = (Hyprland.workspaces && Hyprland.workspaces.values) ? Hyprland.workspaces.values : []
     var ids = [1, 2, 3, 4, 5]
 
     for (var i = 0; i < values.length; i++) {
@@ -98,15 +129,16 @@ Item {
         var toplevels = ws.toplevels.values
         windowCount = toplevels.length
         for (var t = 0; t < toplevels.length; t++) {
-          var appClass = String(toplevels[t].class || toplevels[t].initialClass || "")
-          if (appClass.length > 0) {
-            var iconSrc = (root.shell && root.shell.appLibrary) ? root.shell.appLibrary.iconSource(appClass) : ""
-            icons.push({
-              appClass: appClass,
-              iconSource: iconSrc,
-              title: String(toplevels[t].title || appClass)
-            })
-          }
+          var tl = toplevels[t]
+          var appClass = String((tl && (tl.waylandClass || tl.class || tl.initialClass || tl.appId)) || "")
+          var title = String((tl && (tl.title || tl.initialTitle)) || appClass)
+          var iconSrc = root.resolveIcon(appClass)
+
+          icons.push({
+            appClass: appClass,
+            iconSource: iconSrc,
+            title: title
+          })
         }
       }
 
@@ -147,8 +179,11 @@ Item {
   }
 
   function activateWorkspace(id) {
+    if (id !== undefined && id !== null) {
+      Util.execDetached("hyprctl dispatch workspace " + id)
+      Quickshell.execDetached(["/usr/bin/hyprctl", "dispatch", "workspace", String(id)])
+    }
     root.dismiss()
-    Util.execDetached("hyprctl dispatch workspace " + id)
   }
 
   Connections {
@@ -327,15 +362,30 @@ Item {
                       Repeater {
                         model: modelData.icons.slice(0, 3)
 
-                        delegate: Image {
+                        delegate: Item {
                           required property var modelData
                           width: Style.space(28)
                           height: Style.space(28)
-                          sourceSize.width: Style.space(28)
-                          sourceSize.height: Style.space(28)
-                          fillMode: Image.PreserveAspectFit
-                          source: modelData.iconSource
-                          smooth: true
+
+                          Image {
+                            id: appImg
+                            anchors.fill: parent
+                            sourceSize.width: Style.space(28)
+                            sourceSize.height: Style.space(28)
+                            fillMode: Image.PreserveAspectFit
+                            source: modelData.iconSource
+                            smooth: true
+                            asynchronous: true
+                          }
+
+                          Text {
+                            anchors.centerIn: parent
+                            visible: appImg.status === Image.Error || (appImg.status === Image.Null && appImg.source == "")
+                            text: "󰀻"
+                            font.family: root.fontFamily
+                            font.pixelSize: Style.font.caption
+                            color: isSelected ? root.selectedText : root.foreground
+                          }
                         }
                       }
 
