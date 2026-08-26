@@ -74,7 +74,7 @@ Item {
 
   function resolveIcon(appClass) {
     var raw = String(appClass || "").trim()
-    if (!raw) return Quickshell.iconPath("application-x-executable", true)
+    if (!raw) return ""
 
     var src = ""
     if (root.shell && root.shell.appLibrary) {
@@ -88,13 +88,11 @@ Item {
     if (!src || src.indexOf("application-x-executable") !== -1) {
       var themed = Quickshell.iconPath(raw, true)
       if (!themed) themed = Quickshell.iconPath(raw.toLowerCase(), true)
-      if (themed) {
-        src = (themed.indexOf("file://") === 0 || themed.indexOf("image://") === 0) ? themed : Util.fileUrl(themed)
-      }
+      if (themed) src = themed
     }
 
-    if (!src || src.indexOf("application-x-executable") !== -1) {
-      src = "image://icon/" + raw
+    if (src && src.charAt(0) === "/") {
+      src = Util.fileUrl(src)
     }
 
     return src
@@ -133,6 +131,7 @@ Item {
           var appClass = String((tl && (tl.waylandClass || tl.class || tl.initialClass || tl.appId)) || "")
           var title = String((tl && (tl.title || tl.initialTitle)) || appClass)
           var iconSrc = root.resolveIcon(appClass)
+          if (!iconSrc && title) iconSrc = root.resolveIcon(title)
 
           icons.push({
             appClass: appClass,
@@ -180,8 +179,7 @@ Item {
 
   function activateWorkspace(id) {
     if (id !== undefined && id !== null) {
-      Util.execDetached("hyprctl dispatch workspace " + id)
-      Quickshell.execDetached(["/usr/bin/hyprctl", "dispatch", "workspace", String(id)])
+      Util.execDetached("hyprctl dispatch " + Util.shellQuote("hl.dsp.focus({ workspace = \"" + id + "\" })"))
     }
     root.dismiss()
   }
