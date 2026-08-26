@@ -11,7 +11,7 @@ This document tracks observations, regressions, and tasks from test builds. Each
 | **ISSUE-01** | Theming / Boot | Effie Dark splash/login on install & live media | Medium | 📋 TODO (Filed for `effie-iso` pipeline) |
 | **ISSUE-02** | Hyprland / Keybinds | `ALT + TAB` keybinding activation | High | ✅ Resolved (Verified in test build) |
 | **ISSUE-03** | Workspace Switcher | Workspace switching via Number keys, Click, Return | High | ✅ Resolved (Verified in test build) |
-| **ISSUE-04** | Workspace Switcher | Running window app icons missing (displays utility/gear fallback) | Medium | 🎯 Active Focus (Pending Investigation) |
+| **ISSUE-04** | Workspace Switcher | Running window app icons missing (displays utility/gear fallback) | Medium | 🔄 Implemented (Ready for Test) |
 | **ISSUE-05** | App Grid Plugin | Category pills navigation: overflow & navigation buttons | Low | ✅ Completed (Satisfactory) |
 
 ---
@@ -37,13 +37,11 @@ This document tracks observations, regressions, and tasks from test builds. Each
 ---
 
 ### 🖼️ ISSUE-04: Running Window App Icons Missing (Utility/Gear Fallback)
-- **Current Status**: 🎯 Active Focus (Noted for investigation; fix pending discussion).
-- **Observed Behavior**:
-  - Running application windows in workspace indicator tiles continue to display the fallback utility/gear icon glyph (`󰀻`) instead of the true themed application icon (e.g. Kitty, Godot, Zen, Obsidian, Code).
-- **Investigation Points**:
-  1. Inspect the runtime structure of `Hyprland.workspaces.values[i].toplevels.values` in Quickshell to verify available properties (`appId`, `initialClass`, `waylandClass`, `class`).
-  2. Investigate whether `AppLibrary` icon resolution (`AppLibrary.iconSource`) or Quickshell icon lookup requires full XDG desktop entry resolution (e.g. matching `class` to `.desktop` `Icon=` field).
-  3. Verify QtQuick `Image` loading error handling and investigate fallback icon font rendering.
+- **Current Status**: 🔄 Implemented (Ready for Test).
+- **Fix Implemented**:
+  1. Added `findDesktopIcon(appClass, title)` which cross-references running window classes against `DesktopEntries.applications` (exact match, substring, prefix/suffix heuristics) to retrieve authoritative `.desktop` `Icon=` values.
+  2. Implemented hierarchical resolution (`DesktopEntry.icon` -> `AppLibrary.iconSource` -> `Quickshell.iconPath`) with automatic `file://` URL normalization.
+  3. Enlarged preview card dimensions: card height expanded to `210px`, individual workspace preview tiles to `145×120px`, and app icon badges to `36×36px`.
 
 ---
 
