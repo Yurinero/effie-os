@@ -6,6 +6,14 @@ This document tracks all modifications, additions, deletions, and pending tasks 
 
 ## 1. Activity Log
 
+### [2026-08-26] Workspace Switcher Dispatch Reliability, Desktop Entry Icon Matching & Preview Polish
+- **Author**: Yurinero & Antigravity (Google DeepMind)
+- **Summary**: Resolved workspace switching dispatch by migrating to Hyprland's Lua focus dispatcher (`hl.dsp.focus`), integrated intelligent `.desktop` entry matching (`DesktopEntries.applications`) for reliable app icon resolution, normalized `file://` URL schemes, and expanded workspace preview card dimensions (`145×120px` tiles, `36×36px` icon badges) for enhanced visual clarity.
+- **Modified Files**:
+  - [`shell/plugins/workspace-switcher/WorkspaceSwitcher.qml`](file:///home/yurinero/Projects/effie-os/shell/plugins/workspace-switcher/WorkspaceSwitcher.qml): Implemented `findDesktopIcon`, Lua `hl.dsp.focus` dispatcher, `Util.fileUrl` resolution, and enlarged card geometry.
+  - [`default/hypr/bindings/tiling.lua`](file:///home/yurinero/Projects/effie-os/default/hypr/bindings/tiling.lua): Bound `ALT + TAB` and `ALT + SHIFT + TAB` to `omarchy.workspace-switcher`.
+  - [`test/shell.d/workspace-switcher-test.sh`](file:///home/yurinero/Projects/effie-os/test/shell.d/workspace-switcher-test.sh): Added `ALT + TAB` binding assertions.
+
 ### [2026-08-26] App Grid Category Overflow Fix & Navigation Arrows
 - **Author**: Yurinero & Antigravity (Google DeepMind)
 - **Summary**: Resolved category pill horizontal overflow in `omarchy.app-grid` by wrapping category buttons in a smooth horizontal `Flickable` and adding left/right navigation arrow buttons (`‹` / `›`) that appear dynamically when content overflows.
