@@ -310,18 +310,82 @@ Item {
           }
         }
 
-        // 2. Category Filter Pills
+        // 2. Category Filter Pills with Navigation Arrows
         Row {
           width: parent.width
           spacing: Style.spacing.xs
 
-          Repeater {
-            model: AppCategories.CATEGORIES
-            delegate: Button {
-              required property var modelData
-              text: modelData.icon + " " + modelData.label
-              selected: root.selectedCategory === modelData.id
-              onClicked: root.selectCategory(modelData.id)
+          Button {
+            id: leftArrowBtn
+            anchors.verticalCenter: parent.verticalCenter
+            text: "‹"
+            visible: categoryFlickable.contentX > 0
+            width: Style.space(28)
+            horizontalPadding: 0
+            onClicked: {
+              categoryFlickable.contentX = Math.max(0, categoryFlickable.contentX - Style.space(120))
+            }
+          }
+
+          Flickable {
+            id: categoryFlickable
+            width: parent.width - (leftArrowBtn.visible ? leftArrowBtn.width + Style.spacing.xs : 0) - (rightArrowBtn.visible ? rightArrowBtn.width + Style.spacing.xs : 0)
+            height: categoryRow.implicitHeight
+            contentWidth: categoryRow.implicitWidth
+            contentHeight: height
+            clip: true
+            boundsBehavior: Flickable.StopAtBounds
+            flickableDirection: Flickable.HorizontalFlick
+            Behavior on contentX { NumberAnimation { duration: 150; easing.type: Easing.OutQuad } }
+
+            Row {
+              id: categoryRow
+              spacing: Style.spacing.xs
+
+              Repeater {
+                model: AppCategories.CATEGORIES
+                delegate: Button {
+                  id: catBtn
+                  required property var modelData
+                  required property int index
+                  text: modelData.icon + " " + modelData.label
+                  selected: root.selectedCategory === modelData.id
+                  onClicked: root.selectCategory(modelData.id)
+
+                  Connections {
+                    target: root
+                    function onSelectedCategoryChanged() {
+                      if (root.selectedCategory === catBtn.modelData.id) {
+                        if (catBtn.x < categoryFlickable.contentX) {
+                          categoryFlickable.contentX = Math.max(0, catBtn.x - Style.spacing.xs)
+                        } else if (catBtn.x + catBtn.width > categoryFlickable.contentX + categoryFlickable.width) {
+                          categoryFlickable.contentX = Math.max(0, Math.min(categoryFlickable.contentWidth - categoryFlickable.width, (catBtn.x + catBtn.width) - categoryFlickable.width + Style.spacing.xs))
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+
+            WheelHandler {
+              orientation: Qt.Horizontal
+              onWheel: function(event) {
+                var delta = event.angleDelta.y || event.angleDelta.x
+                categoryFlickable.contentX = Math.max(0, Math.min(categoryFlickable.contentWidth - categoryFlickable.width, categoryFlickable.contentX - delta))
+              }
+            }
+          }
+
+          Button {
+            id: rightArrowBtn
+            anchors.verticalCenter: parent.verticalCenter
+            text: "›"
+            visible: categoryFlickable.contentWidth > categoryFlickable.width && categoryFlickable.contentX < (categoryFlickable.contentWidth - categoryFlickable.width - 2)
+            width: Style.space(28)
+            horizontalPadding: 0
+            onClicked: {
+              categoryFlickable.contentX = Math.min(categoryFlickable.contentWidth - categoryFlickable.width, categoryFlickable.contentX + Style.space(120))
             }
           }
         }
