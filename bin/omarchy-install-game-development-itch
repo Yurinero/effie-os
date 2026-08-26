@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# omarchy:summary=Install Itch.io as a web app and launch it
+# omarchy:group=install
+# omarchy:name=game-development itch
+
+set -e
+
+echo "Installing Itch.io..."
+omarchy-webapp-install "Itch.io" "https://itch.io" "https://static.itch.io/images/itchio-textless-white.svg"
+
+setsid omarchy-launch-webapp "https://itch.io" >/dev/null 2>&1 &

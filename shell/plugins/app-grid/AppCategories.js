@@ -2,6 +2,7 @@ var CATEGORIES = [
   { id: "all", label: "All", icon: "󰀻" },
   { id: "internet", label: "Internet", icon: "󰖟" },
   { id: "development", label: "Development", icon: "󰅩" },
+  { id: "game-development", label: "Game Development", icon: "" },
   { id: "media", label: "Media & Design", icon: "󰕼" },
   { id: "productivity", label: "Productivity", icon: "󰏫" },
   { id: "utilities", label: "Utilities & System", icon: "󰘳" },
@@ -17,6 +18,9 @@ var CATEGORY_MAP = {
   internet: [
     "network", "webbrowser", "email", "chat", "instantmessaging",
     "feed", "filetransfer", "p2p", "remoteaccess", "telephony", "ircclient", "news"
+  ],
+  "game-development": [
+    "game-development", "gamedev", "godot", "unity", "unreal", "gameengine"
   ],
   development: [
     "development", "ide", "texteditor", "debugger", "revisioncontrol",
@@ -81,6 +85,9 @@ function getCategoryForEntry(raw) {
   }
   if (/\b(chromium|firefox|brave|chrome|browser|discord|telegram|slack|whatsapp|signal|hey|zoom|mail|chat|messages?|twitter)\b/i.test(fullText)) {
     return "internet"
+  }
+  if (/\b(godot|unity|unreal|defold|gamemaker|raylib|love2d|aseprite|itch\.io|itchio)\b/i.test(fullText) || /game\s*dev(elopment)?|game\s*engine/i.test(fullText)) {
+    return "game-development"
   }
   if (/\b(neovim|nvim|vscode|code|studio code|sublime|git|lazygit|debugger|compiler|opencode|jetbrains|toolbox|idea|pycharm|clion|webstorm|rider|rustrover|goland|kate|kwrite)\b/i.test(fullText)) {
     return "development"

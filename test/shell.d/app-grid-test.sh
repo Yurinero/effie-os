@@ -27,7 +27,9 @@ const sampleRows = [
   { entry: { name: 'YouTube', id: 'YouTube', exec: 'omarchy-launch-webapp https://youtube.com/', icon: 'youtube' } },
   { entry: { name: 'cliamp', categories: 'AudioVideo;Audio;Player;', id: 'cliamp.desktop', icon: 'cliamp' } },
   { entry: { name: 'Basecamp', id: 'Basecamp', exec: 'omarchy-launch-webapp https://launchpad.37signals.com', icon: 'basecamp' } },
-  { entry: { name: 'Discord', id: 'Discord', exec: 'omarchy-launch-webapp https://discord.com/', icon: 'discord' } }
+  { entry: { name: 'Discord', id: 'Discord', exec: 'omarchy-launch-webapp https://discord.com/', icon: 'discord' } },
+  { entry: { name: 'Godot Engine', categories: 'Development;IDE;', id: 'org.godotengine.Godot.desktop', comment: 'Multi-platform 2D and 3D game engine', icon: 'godot' } },
+  { entry: { name: 'Itch.io', id: 'Itch.io', exec: 'omarchy-launch-webapp https://itch.io', icon: 'itch.io' } }
 ]
 
 assertEqual(categories.getCategoryForEntry(sampleRows[0]), 'internet', 'Chromium maps to internet')
@@ -41,6 +43,14 @@ assertEqual(categories.getCategoryForEntry(sampleRows[7]), 'media', 'YouTube map
 assertEqual(categories.getCategoryForEntry(sampleRows[8]), 'media', 'cliamp maps to media')
 assertEqual(categories.getCategoryForEntry(sampleRows[9]), 'productivity', 'Basecamp maps to productivity')
 assertEqual(categories.getCategoryForEntry(sampleRows[10]), 'internet', 'Discord maps to internet')
+assertEqual(categories.getCategoryForEntry(sampleRows[11]), 'game-development', 'Godot maps to game-development')
+assertEqual(categories.getCategoryForEntry(sampleRows[12]), 'game-development', 'Itch.io maps to game-development')
+
+// Game Development category filter
+const gameDevApps = categories.filterEntries(sampleRows, 'game-development', '')
+assertEqual(gameDevApps.length, 2, 'game-development filter returns 2 apps (Godot Engine, Itch.io)')
+assertEqual(gameDevApps[0].name, 'Godot Engine', 'first game dev app is Godot Engine')
+assertEqual(gameDevApps[1].name, 'Itch.io', 'second game dev app is Itch.io')
 
 // Category filter
 const internetApps = categories.filterEntries(sampleRows, 'internet', '')
