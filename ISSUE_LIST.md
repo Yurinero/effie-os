@@ -11,7 +11,7 @@ This document tracks observations, regressions, and tasks from test builds. Each
 | **ISSUE-01** | Theming / Boot | Effie Dark splash/login on install & live media | Medium | 📋 TODO (Filed for `effie-iso` pipeline) |
 | **ISSUE-02** | Hyprland / Keybinds | `ALT + TAB` keybinding activation | High | ✅ Resolved (Verified in test build) |
 | **ISSUE-03** | Workspace Switcher | Workspace switching via Number keys, Click, Return | High | ✅ Resolved (Verified in test build) |
-| **ISSUE-04** | Workspace Switcher | Running window app icons missing (displays utility/gear fallback) | Medium | 🔄 Implemented (Ready for Test) |
+| **ISSUE-04** | Workspace Switcher | Running window app icons missing (displays utility/gear fallback) | Medium | ✅ Resolved (Verified in test build) |
 | **ISSUE-05** | App Grid Plugin | Category pills navigation: overflow & navigation buttons | Low | ✅ Completed (Satisfactory) |
 
 ---
@@ -36,12 +36,12 @@ This document tracks observations, regressions, and tasks from test builds. Each
 
 ---
 
-### 🖼️ ISSUE-04: Running Window App Icons Missing (Utility/Gear Fallback)
-- **Current Status**: 🔄 Implemented (Ready for Test).
-- **Fix Implemented**:
-  1. Added `findDesktopIcon(appClass, title)` which cross-references running window classes against `DesktopEntries.applications` (exact match, substring, prefix/suffix heuristics) to retrieve authoritative `.desktop` `Icon=` values.
-  2. Implemented hierarchical resolution (`DesktopEntry.icon` -> `AppLibrary.iconSource` -> `Quickshell.iconPath`) with automatic `file://` URL normalization.
-  3. Enlarged preview card dimensions: card height expanded to `210px`, individual workspace preview tiles to `145×120px`, and app icon badges to `36×36px`.
+### 🖼️ ISSUE-04: Running Window App Icons in Workspace Switcher
+- **Current Status**: ✅ Resolved (Verified in test build).
+- **Verification Results**:
+  - App icons correctly resolve and render across workspaces for all running applications.
+  - Icon rows populate seamlessly even when multiple applications are running simultaneously on the same workspace.
+  - Workspace switching remains fully functional with zero regressions.
 
 ---
 
