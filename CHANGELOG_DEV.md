@@ -6,7 +6,44 @@ This document tracks all modifications, additions, deletions, and pending tasks 
 
 ## 1. Activity Log
 
-### [2026-08-26] Packaging Pipeline, External PKGBUILD Support & README Updates
+### [2026-08-26] App Grid Category Overflow Fix & Navigation Arrows
+- **Author**: Yurinero & Antigravity (Google DeepMind)
+- **Summary**: Resolved category pill horizontal overflow in `omarchy.app-grid` by wrapping category buttons in a smooth horizontal `Flickable` and adding left/right navigation arrow buttons (`‹` / `›`) that appear dynamically when content overflows.
+- **Modified Files**:
+  - [`shell/plugins/app-grid/AppGrid.qml`](file:///home/yurinero/Projects/effie-os/shell/plugins/app-grid/AppGrid.qml): Replaced rigid `Row` with scrollable `Flickable` and dynamic left/right arrow step-scroll buttons.
+
+### [2026-08-26] Game Development Category & Lazy Installers
+- **Author**: Yurinero & Antigravity (Google DeepMind)
+- **Summary**: Added a dedicated **Game Development** section across the desktop menu and Application Grid. Added official Arch package installer for Godot Engine and custom web app lazy installer/uninstaller for Itch.io.
+- **Added Files**:
+  - [`bin/omarchy-install-game-development-itch`](file:///home/yurinero/Projects/effie-os/bin/omarchy-install-game-development-itch): Lazy installer for Itch.io web app launcher and icon.
+  - [`bin/omarchy-remove-game-development-itch`](file:///home/yurinero/Projects/effie-os/bin/omarchy-remove-game-development-itch): Uninstaller for Itch.io web app launcher.
+- **Modified Files**:
+  - [`default/omarchy/omarchy-menu.jsonc`](file:///home/yurinero/Projects/effie-os/default/omarchy/omarchy-menu.jsonc): Added `install.game-development` (Godot & Itch.io) and `remove.game-development`.
+  - [`shell/plugins/app-grid/AppCategories.js`](file:///home/yurinero/Projects/effie-os/shell/plugins/app-grid/AppCategories.js): Added `game-development` category (``), keywords, and classification heuristics.
+  - [`test/shell.d/app-grid-test.sh`](file:///home/yurinero/Projects/effie-os/test/shell.d/app-grid-test.sh) & [`test/shell.d/menu-test.sh`](file:///home/yurinero/Projects/effie-os/test/shell.d/menu-test.sh): Added test assertions.
+
+### [2026-08-26] Effie Dark Default Theme & Plymouth/SDDM Boot Integration
+- **Author**: Yurinero & Antigravity (Google DeepMind)
+- **Summary**: Integrated "Effie Dark" (`#050516` background, `#E8AB76` foreground, `#8971a2` accent) as the default desktop, boot splash (Plymouth), and login manager (SDDM) theme. Shipped theme definitions, unlock assets, and setup hooks.
+- **Added Files**:
+  - `themes/effie-dark/`: Complete theme palette (`colors.toml`), lockscreen configuration (`shell.lock.toml`), unlock assets (`unlock.png`, `preview-unlock.png`), and editor definitions.
+- **Modified Files**:
+  - [`default/plymouth/omarchy.script`](file:///home/yurinero/Projects/effie-os/default/plymouth/omarchy.script): Updated default background color to `#050516`.
+  - [`default/sddm/omarchy/Main.qml`](file:///home/yurinero/Projects/effie-os/default/sddm/omarchy/Main.qml): Updated default background color to `#050516`.
+  - `default/plymouth/` & `default/sddm/omarchy/`: Updated logo and tinted UI assets with Effie Dark palette.
+  - [`install/user/theme.sh`](file:///home/yurinero/Projects/effie-os/install/user/theme.sh) & [`install/login/sddm.sh`](file:///home/yurinero/Projects/effie-os/install/login/sddm.sh): Configured initial default theme seeding and Plymouth setup hooks.
+  - [`migrations/1787481315.sh`](file:///home/yurinero/Projects/effie-os/migrations/1787481315.sh): Seeded initial default theme to Effie Dark.
+
+### [2026-08-26] Superfile Theming Pipeline Integration
+- **Author**: Yurinero & Antigravity (Google DeepMind)
+- **Summary**: Added Superfile theme template (`superfile.toml.tpl`) to Omarchy's automated theming pipeline, preconfigured user configuration directory (`config/superfile/`), added active symlink hooks, and created versioned migration.
+- **Added Files**:
+  - [`default/themed/superfile.toml.tpl`](file:///home/yurinero/Projects/effie-os/default/themed/superfile.toml.tpl): Superfile TOML color template mapped to Omarchy palette tokens.
+  - [`config/superfile/config.toml`](file:///home/yurinero/Projects/effie-os/config/superfile/config.toml): Default configuration referencing `theme = "omarchy"`.
+  - [`migrations/1787706460.sh`](file:///home/yurinero/Projects/effie-os/migrations/1787706460.sh): User migration linking `~/.config/superfile/theme/omarchy.toml` to current theme.
+- **Modified Files**:
+  - [`install/user/theme.sh`](file:///home/yurinero/Projects/effie-os/install/user/theme.sh): Added Superfile theme directory and active symlink creation.
 - **Author**: Yurinero & Antigravity (Google DeepMind)
 - **Summary**: Enhanced the packaging pipeline (`packaging/build-packages.sh`) to automatically compile custom packages (`photogimp`, `photoinkscape`, `photokrita`) from external `effie-pkgs`, updated ISO profile auto-inclusion (`scripts/build-iso.sh`), added preinstall package definitions, and documented planned roadmap features in `README.md`.
 - **Modified Files**:
