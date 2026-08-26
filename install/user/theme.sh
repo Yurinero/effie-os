@@ -4,13 +4,16 @@ mkdir -p ~/.config/omarchy/themes
 if [[ ! -s $HOME/.local/state/omarchy/current/theme.name ]]; then
   # iso-chroot and provision-owner both run without a live session to notify.
   if [[ ${OMARCHY_SETUP_CONTEXT:-runtime} != "runtime" ]]; then
-    OMARCHY_THEME_HEADLESS=1 omarchy-theme-set "Tokyo Night"
+    OMARCHY_THEME_HEADLESS=1 omarchy-theme-set "Effie Dark"
     rm -f ~/.config/chromium/SingletonLock # otherwise archiso owns the Chromium singleton
   else
-    omarchy-theme-set "Tokyo Night"
+    omarchy-theme-set "Effie Dark"
   fi
 fi
 omarchy-theme-set-pi --activate
 
 mkdir -p ~/.config/btop/themes
 ln -snf "$HOME/.local/state/omarchy/current/theme/btop.theme" ~/.config/btop/themes/current.theme
+
+mkdir -p ~/.config/superfile/theme
+ln -snf "$HOME/.local/state/omarchy/current/theme/superfile.toml" ~/.config/superfile/theme/omarchy.toml
