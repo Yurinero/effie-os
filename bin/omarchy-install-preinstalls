@@ -17,6 +17,9 @@ if gum confirm "Are you sure you want to restore all preinstalled web apps, TUI 
     libreoffice-fresh \
     xournalpp \
     pinta \
+    photogimp \
+    photoinkscape \
+    photokrita \
     obsidian \
     obs-studio \
     kdenlive \

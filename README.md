@@ -21,8 +21,18 @@ To learn by breaking things, build an intuitive setup for daily workflows, and h
 
 ### Key Additions & Changes
 * **Superfile Integration:** Bundled as an optional, feature-packed TUI file manager alongside the default CLI toolchain.
+* **Lazy Installer for IDEs & Toolboxes:** Added on-demand lazy installer for JetBrains Toolbox under **Install > Editor** and **Install > Development**.
+* **Text Editors:** Added Kate as another on-demand lazy installed Text editor option.
 * **Traditional App Launcher GUI:** Bound to `SUPER + A` for quick, visual point-and-click searching for users with a more traditional Windows/MacOS preference.
 * **Workspace & Virtual Desktop Switcher:** Bound to `ALT + SPACE` and `SUPER + TAB` for macOS/Windows-style floating workspace cycling with live application icon previews.
+
+---
+
+### Planned Additions & Changes
+* **Alternative Application Match:** Integrate lazy-load options for Linux alternatives to popular macOS/Windows applications, for users transitioning from other systems. "Photoshop" may resolve to PhotoGIMP, "Premiere" to DaVinci Resolve, "Illustrator" to Inkscape, etc. This will be done through a plugin that can be enabled and disabled at will.
+* **Effie Colour Scheme and Branding:** Add two themes in Light and Dark flavours as the preferred/default for the system, inspired by the Greek origin of the name.
+* **Effie Splash Screen:** Add a custom splash screen for the login screen and the application launcher.
+* **Effie AI:** A small local model to answer questions about the system and guide new users through common Linux pitfalls.
 
 ---
 

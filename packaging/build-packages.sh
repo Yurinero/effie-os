@@ -112,11 +112,44 @@ build_pkg() {
   cp -f "$built_pkg" "$DEST_DIR/"
 }
 
+build_external_pkg() {
+  local pkg_name="$1"
+  local pkgbuild_src="$ROOT/../effie-pkgs/pkgbuilds/$pkg_name"
+  local work_dir="$BUILD_WORK_DIR/$pkg_name"
+
+  if [[ -d "$pkgbuild_src" ]]; then
+    echo "==> Building package from effie-pkgs: $pkg_name..."
+    rm -rf "$work_dir"
+    mkdir -p "$work_dir"
+    cp -a "$pkgbuild_src/." "$work_dir/"
+
+    (
+      cd "$work_dir"
+      makepkg -f --nodeps --skipchecksums --noconfirm
+    )
+
+    local built_pkg
+    built_pkg=$(ls -t "$work_dir"/$pkg_name-*.pkg.tar.* 2>/dev/null | grep -v '\.sig$' | head -1 || true)
+    if [[ -z $built_pkg || ! -f $built_pkg ]]; then
+      echo "ERROR: Failed to build $pkg_name (no package artifact found in $work_dir)" >&2
+      exit 1
+    fi
+
+    echo "==> Successfully built: $(basename "$built_pkg")"
+    cp -f "$built_pkg" "$DEST_DIR/"
+  fi
+}
+
 # 1. Build omarchy-settings first
 build_pkg "omarchy-settings"
 
 # 2. Build omarchy
 build_pkg "omarchy"
+
+# 3. Build custom local packages if present in effie-pkgs
+for custom_pkg in photogimp photoinkscape photokrita; do
+  build_external_pkg "$custom_pkg"
+done
 
 # 3. Generate/Update Pacman Repository Database
 echo "==> Creating / Updating repository database in $DEST_DIR..."

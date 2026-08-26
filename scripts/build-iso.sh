@@ -224,6 +224,11 @@ inxi
 fastfetch
 qemu-guest-agent
 EOF
+
+if [[ -f "$ROOT/install/omarchy-base.packages" ]]; then
+  grep -hv '^#\|^$' "$ROOT/install/omarchy-base.packages" >> "$STAGED_PROFILE_DIR/packages.x86_64"
+fi
+
 sort -u "$STAGED_PROFILE_DIR/packages.x86_64" -o "$STAGED_PROFILE_DIR/packages.x86_64"
 
 AIROOTFS="$STAGED_PROFILE_DIR/airootfs"

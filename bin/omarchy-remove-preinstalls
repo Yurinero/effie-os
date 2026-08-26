@@ -23,6 +23,9 @@ if gum confirm "Are you sure you want to remove all preinstalled web apps, TUI w
     libreoffice-fresh \
     xournalpp \
     pinta \
+    photogimp \
+    photoinkscape \
+    photokrita \
     obsidian \
     obs-studio \
     kdenlive \

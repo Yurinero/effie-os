@@ -6,6 +6,17 @@ This document tracks all modifications, additions, deletions, and pending tasks 
 
 ## 1. Activity Log
 
+### [2026-08-26] Packaging Pipeline, External PKGBUILD Support & README Updates
+- **Author**: Yurinero & Antigravity (Google DeepMind)
+- **Summary**: Enhanced the packaging pipeline (`packaging/build-packages.sh`) to automatically compile custom packages (`photogimp`, `photoinkscape`, `photokrita`) from external `effie-pkgs`, updated ISO profile auto-inclusion (`scripts/build-iso.sh`), added preinstall package definitions, and documented planned roadmap features in `README.md`.
+- **Modified Files**:
+  - [`packaging/build-packages.sh`](file:///home/yurinero/Projects/effie-os/packaging/build-packages.sh): Added `build_external_pkg` support for building packages from `../effie-pkgs/pkgbuilds/`.
+  - [`scripts/build-iso.sh`](file:///home/yurinero/Projects/effie-os/scripts/build-iso.sh): Added dynamic inclusion of `install/omarchy-base.packages` to ISO package profile.
+  - [`install/omarchy-base.packages`](file:///home/yurinero/Projects/effie-os/install/omarchy-base.packages): Added `photogimp`, `photoinkscape`, `photokrita`.
+  - [`bin/omarchy-install-preinstalls`](file:///home/yurinero/Projects/effie-os/bin/omarchy-install-preinstalls) & [`bin/omarchy-remove-preinstalls`](file:///home/yurinero/Projects/effie-os/bin/omarchy-remove-preinstalls): Added new preinstalled package entries.
+  - [`README.md`](file:///home/yurinero/Projects/effie-os/README.md): Added roadmap and planned additions.
+- **Deleted Files**: None
+
 ### [2026-08-26] Workspace & Virtual Desktop Switcher Plugin
 - **Author**: Antigravity Assistant & Development Team
 - **Summary**: Implemented a floating macOS/Windows-style Workspace Switcher overlay (`omarchy.workspace-switcher`) displaying all active workspaces, focused indicator pills, and live application icon strips with keyboard cycling (`ALT + SPACE` / `SUPER + TAB` / Arrow keys / `1`..`9`) and mouse activation.
