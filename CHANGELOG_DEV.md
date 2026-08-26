@@ -6,6 +6,17 @@ This document tracks all modifications, additions, deletions, and pending tasks 
 
 ## 1. Activity Log
 
+### [2026-08-26] Workspace & Virtual Desktop Switcher Plugin
+- **Author**: Antigravity Assistant & Development Team
+- **Summary**: Implemented a floating macOS/Windows-style Workspace Switcher overlay (`omarchy.workspace-switcher`) displaying all active workspaces, focused indicator pills, and live application icon strips with keyboard cycling (`ALT + SPACE` / `SUPER + TAB` / Arrow keys / `1`..`9`) and mouse activation.
+- **Added Files**:
+  - [`shell/plugins/workspace-switcher/manifest.json`](file:///home/yurinero/Projects/effie-os/shell/plugins/workspace-switcher/manifest.json): Plugin manifest declaring `omarchy.workspace-switcher` overlay.
+  - [`shell/plugins/workspace-switcher/WorkspaceSwitcher.qml`](file:///home/yurinero/Projects/effie-os/shell/plugins/workspace-switcher/WorkspaceSwitcher.qml): Graphical floating overlay with live Hyprland workspace cards and toplevel app icons.
+  - [`test/shell.d/workspace-switcher-test.sh`](file:///home/yurinero/Projects/effie-os/test/shell.d/workspace-switcher-test.sh): Automated test suite for plugin registration, lifecycle, and keybindings.
+- **Modified Files**:
+  - [`default/hypr/bindings/tiling.lua`](file:///home/yurinero/Projects/effie-os/default/hypr/bindings/tiling.lua): Bound `ALT + SPACE` and `SUPER + TAB` to toggle `omarchy.workspace-switcher`.
+- **Deleted Files**: None
+
 ### [2026-08-26] Installation Branding & Fastfetch ASCII Wordmark
 - **Author**: Antigravity Assistant & Development Team
 - **Summary**: Applied the "powered by Omarchy" subtitle branding specifically to the installer/login screens (`default/plymouth/logo.png`, `default/sddm/omarchy/logo.png`) in Effie green (`#a8cd76`) and rendered a pixel-aligned Unicode half-block ASCII version for `fastfetch` and the system about window (`logo.txt`, `icon.txt`).

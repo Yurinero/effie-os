@@ -22,6 +22,7 @@ To learn by breaking things, build an intuitive setup for daily workflows, and h
 ### Key Additions & Changes
 * **Superfile Integration:** Bundled as an optional, feature-packed TUI file manager alongside the default CLI toolchain.
 * **Traditional App Launcher GUI:** Bound to `SUPER + A` for quick, visual point-and-click searching for users with a more traditional Windows/MacOS preference.
+* **Workspace & Virtual Desktop Switcher:** Bound to `ALT + SPACE` and `SUPER + TAB` for macOS/Windows-style floating workspace cycling with live application icon previews.
 
 ---
 

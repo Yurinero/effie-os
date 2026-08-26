@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "omarchy.workspace-switcher",
+  "name": "Workspace Switcher",
+  "version": "1.0.0",
+  "author": "Effie OS",
+  "description": "Visual workspace overview and switcher overlay with live app icon previews",
+  "kinds": [
+    "overlay"
+  ],
+  "keepLoaded": true,
+  "entryPoints": {
+    "overlay": "WorkspaceSwitcher.qml"
+  }
+}
