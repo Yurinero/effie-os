@@ -9,9 +9,9 @@ This document tracks observations, regressions, and tasks from test builds. Each
 | ID | Component | Issue | Severity | Status |
 |---|---|---|---|---|
 | **ISSUE-01** | Theming / Boot | Effie Dark splash/login on install & live media | Medium | 📋 TODO (Filed for `effie-iso` pipeline) |
-| **ISSUE-02** | Hyprland / Keybinds | `ALT + TAB` fails to summon Workspace Switcher | High | 🎯 Active Focus / In Progress |
-| **ISSUE-03** | Workspace Switcher | Overlay closes on Enter/Click/NumKey without switching workspace | High | 🎯 Active Focus / In Progress |
-| **ISSUE-04** | Workspace Switcher | Window app icons missing / fallback glyphs rendered | Medium | 🎯 Active Focus / In Progress |
+| **ISSUE-02** | Hyprland / Keybinds | `ALT + TAB` keybinding activation | High | ✅ Resolved (Verified in test build) |
+| **ISSUE-03** | Workspace Switcher | Workspace switching via Number keys, Click, Return | High | ✅ Resolved (Verified in test build) |
+| **ISSUE-04** | Workspace Switcher | Running window app icons missing (displays utility/gear fallback) | Medium | 🎯 Active Focus (Pending Investigation) |
 | **ISSUE-05** | App Grid Plugin | Category pills navigation: overflow & navigation buttons | Low | ✅ Completed (Satisfactory) |
 
 ---
@@ -26,25 +26,24 @@ This document tracks observations, regressions, and tasks from test builds. Each
 
 ---
 
-### 🎯 Workspace Switcher Suite (ISSUE-02, ISSUE-03, ISSUE-04) — Current Focus
+### ⌨️ ISSUE-02 & ISSUE-03: Workspace Switcher Navigation & Dispatch
+- **Current Status**: ✅ Resolved (Verified in test build).
+- **Verification Results**:
+  - `ALT + TAB` / `ALT + SPACE` accurately summon the Workspace Switcher overlay.
+  - Number keys (`1`–`9`, `0`), mouse clicks, and Return key are accurately consumed.
+  - Hyprland workspace focus switches immediately upon confirmation.
+  - Calling further empty workspaces extends the workspace row dynamically and accurately.
 
-#### ⌨️ ISSUE-02: `ALT + TAB` Keybinding Interception
-- **Observed Behavior**: `ALT + TAB` does not trigger the Workspace Switcher overlay in the running session.
-- **Root Cause & Investigation**:
-  - `default/hypr/bindings/tiling.lua` was updated with `ALT + TAB` bound to `omarchy.workspace-switcher`, but compositor session configs may need reload (`omarchy-refresh-config hypr/bindings/tiling.lua` / Hyprland config reload) or submap conflict resolution.
-- **Next Steps**:
-  - Verify keybinding registration directly with Hyprland binds (`hyprctl binds -j`) and test dedicated keybind dispatcher.
+---
 
-#### 🔢 ISSUE-03: Switching Regression (Closes Without Switching)
-- **Observed Behavior**: Selecting a workspace or pressing Enter / Click / Number key closes the overlay but does not change the active Hyprland workspace.
-- **Root Cause & Investigation**:
-  - Investigate the layer-shell focus ungrab cycle and IPC execution sequence in Quickshell.
-  - Test synchronous Hyprland IPC dispatch mechanisms to ensure workspace transition completes before overlay dismissal.
-
-#### 🖼️ ISSUE-04: App Icons Missing in Workspace Indicators
-- **Observed Behavior**: Running window indicators show the fallback utility glyph (`󰀻`) instead of the true application icon.
-- **Root Cause & Investigation**:
-  - Inspect Quickshell's `ToplevelManager` and `Hyprland.workspaces` toplevel objects to ensure correct `appId` / `initialClass` extraction and verify icon provider URLs (`file://` vs `image://icon/`).
+### 🖼️ ISSUE-04: Running Window App Icons Missing (Utility/Gear Fallback)
+- **Current Status**: 🎯 Active Focus (Noted for investigation; fix pending discussion).
+- **Observed Behavior**:
+  - Running application windows in workspace indicator tiles continue to display the fallback utility/gear icon glyph (`󰀻`) instead of the true themed application icon (e.g. Kitty, Godot, Zen, Obsidian, Code).
+- **Investigation Points**:
+  1. Inspect the runtime structure of `Hyprland.workspaces.values[i].toplevels.values` in Quickshell to verify available properties (`appId`, `initialClass`, `waylandClass`, `class`).
+  2. Investigate whether `AppLibrary` icon resolution (`AppLibrary.iconSource`) or Quickshell icon lookup requires full XDG desktop entry resolution (e.g. matching `class` to `.desktop` `Icon=` field).
+  3. Verify QtQuick `Image` loading error handling and investigate fallback icon font rendering.
 
 ---
 
